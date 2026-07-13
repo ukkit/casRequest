@@ -1,6 +1,6 @@
-# camsRequest
+# casRequest
 
-Automates submitting a CAMS Consolidated Account Statement (CAS) request:
+Automates submitting a CAS - CAMS+KFintech request on CAMS site:
 Detailed statement, Specific Period from 01-Jan-2001 to today, for one or
 more investors listed in a CSV file.
 
@@ -36,13 +36,13 @@ each row's PAN (lowercased) — you don't need to include them in the CSV.
 ## Run
 
 ```
-uv run python cams_statement_request.py my_requests.csv
+uv run python cas_request.py my_requests.csv
 ```
 
 Add `--headless` to run without a visible browser window:
 
 ```
-uv run python cams_statement_request.py my_requests.csv --headless
+uv run python cas_request.py my_requests.csv --headless
 ```
 
 The script processes each row: it loads the CAMS CAS page, accepts the
