@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Project instructions
+CLAUDE.md
+
+# Investor data (contains PAN/email) - never commit real requests
+*.csv
+!sample_requests.csv
+
+# Run logs (results.csv is already covered by the *.csv rule above)
+cams_requests.log
