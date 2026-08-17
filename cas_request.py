@@ -196,6 +196,7 @@ def fill_form(driver, wait, email, pan):
     driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='pan']").send_keys(pan.upper())
     driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='password']").send_keys(password)
     driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='confirmPassword']").send_keys(password)
+    return password
 
 
 def wait_for_submit_result(driver, timeout=15):
@@ -240,9 +241,10 @@ def process_row(email, pan, headless):
         driver.get(URL)
         accept_disclaimer(driver, wait)
         dismiss_ad_popup(driver, wait)
-        fill_form(driver, wait, email, pan)
+        password = fill_form(driver, wait, email, pan)
         status, detail = submit(driver)
         if status == "success":
+            detail = f"{detail}; password={password}"
             logger.info("SUCCESS %s - %s", email, detail)
         else:
             logger.error("%s %s - %s", status.upper(), email, detail)
