@@ -14,11 +14,13 @@ import datetime
 import logging
 import os
 import re
+import shutil
 import time
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -56,11 +58,18 @@ def read_rows(csv_path):
 
 
 def build_driver(headless):
+    """Use the system-installed Chromium/chromedriver if present, since Selenium
+    Manager's auto-download has no binaries for some platforms (e.g. Raspberry Pi/aarch64)."""
     opts = Options()
     if headless:
         opts.add_argument("--headless=new")
     opts.add_argument("--window-size=1280,1024")
-    return webdriver.Chrome(options=opts)
+    browser = shutil.which("chromium-browser") or shutil.which("chromium")
+    if browser:
+        opts.binary_location = browser
+    driver_path = shutil.which("chromedriver")
+    service = ChromeService(executable_path=driver_path) if driver_path else ChromeService()
+    return webdriver.Chrome(options=opts, service=service)
 
 
 def jsclick(driver, el):
