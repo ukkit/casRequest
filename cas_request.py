@@ -167,6 +167,11 @@ def set_date(driver, wait, formcontrolname, target: datetime.date):
     )
 
 
+def build_password(pan):
+    """PAN-derived password meeting CAMS complexity rules (upper, lower, digit, special)."""
+    return f"{pan[:1].upper()}{pan[1:].lower()}@1"
+
+
 def fill_form(driver, wait, email, pan):
     click_radio(driver, "mat-radio-group[formcontrolname='statemttype']", "detailed")
     wait.until(EC.presence_of_element_located(
@@ -177,7 +182,7 @@ def fill_form(driver, wait, email, pan):
     set_date(driver, wait, "from_date", FROM_DATE)
     set_date(driver, wait, "to_date", datetime.date.today())
 
-    password = pan.lower()
+    password = build_password(pan)
     driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='email_id']").send_keys(email)
     driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='pan']").send_keys(pan.upper())
     driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='password']").send_keys(password)
