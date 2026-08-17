@@ -206,13 +206,13 @@ def wait_for_submit_result(driver, timeout=15):
     while time.time() < deadline:
         try:
             email_val = driver.find_element(By.CSS_SELECTOR, "input[formcontrolname='email_id']").get_attribute("value")
+            if not email_val:
+                return "success", "Form accepted and reset by CAMS"
+            errors = [e.text for e in driver.find_elements(By.CSS_SELECTOR, "mat-error") if e.text.strip()]
+            if errors:
+                return "error", "; ".join(errors)
         except (NoSuchElementException, StaleElementReferenceException):
             return "success", "Form accepted; page re-rendered by CAMS"
-        if not email_val:
-            return "success", "Form accepted and reset by CAMS"
-        errors = [e.text for e in driver.find_elements(By.CSS_SELECTOR, "mat-error") if e.text.strip()]
-        if errors:
-            return "error", "; ".join(errors)
         time.sleep(0.5)
     return "unknown", "No confirmation observed within timeout; verify manually"
 
